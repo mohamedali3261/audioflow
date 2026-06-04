@@ -21,6 +21,7 @@ import confetti from 'canvas-confetti';
 import JSZip from 'jszip';
 
 import { Landing } from './pages/Landing';
+import { PdfEditor } from './pages/PdfEditor';
 import { AudioUploader } from './components/AudioUploader';
 import { AudioList } from './components/AudioList';
 import { SettingsPanel } from './components/SettingsPanel';
@@ -189,14 +190,16 @@ export default function App() {
 
   const handleNavigate = (page: 'audio' | 'pdf') => {
     setCurrentPage(page);
-    if (page === 'pdf') {
-      window.location.href = '/pdf';
-    }
   };
 
   // Landing Page
   if (currentPage === 'landing') {
     return <Landing onNavigate={handleNavigate} lang={lang} />;
+  }
+
+  // PDF Editor Page
+  if (currentPage === 'pdf') {
+    return <PdfEditor onBack={() => setCurrentPage('landing')} />;
   }
 
   if (loadingError) {
