@@ -1,0 +1,8 @@
+{
+  "name": "AudioFlow",
+  "description": "مضغط صوت احترافي يدعم المعالجة الجماعية، عرض الموجات الصوتية، تسوية الصوت، وقص الملفات بدقة عالية.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
