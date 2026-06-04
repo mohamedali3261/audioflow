@@ -234,8 +234,38 @@ export default function App() {
       {/* Header Navigation */}
       <header className="flex items-center justify-between px-4 py-2 bg-[#1A1D23] border-b border-[#2D3139] shrink-0 sm:px-6 sm:py-3">
         <div className="flex items-center gap-2 sm:gap-3">
-          <div className="w-7 h-7 bg-blue-600 rounded-sm flex items-center justify-center shadow-[0_0_10px_rgba(37,99,235,0.3)] sm:w-8 sm:h-8">
-            <Waves size={16} className="text-white" />
+          <div className="w-7 h-7 flex items-center justify-center sm:w-8 sm:h-8">
+            <svg viewBox="0 0 100 100" className="w-full h-full">
+              <defs>
+                <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: '#6366f1', stopOpacity: 1 }} />
+                  <stop offset="100%" style={{ stopColor: '#8b5cf6', stopOpacity: 1 }} />
+                </linearGradient>
+              </defs>
+              <circle cx="50" cy="50" r="45" fill="url(#logoGrad)" className="drop-shadow-lg" />
+              <g fill="white">
+                <motion.rect 
+                  x="30" y="35" width="8" rx="3"
+                  animate={{ height: [30, 15, 30] }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+                />
+                <motion.rect 
+                  x="42" y="28" width="8" rx="3"
+                  animate={{ height: [44, 22, 44] }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut", delay: 0.1 }}
+                />
+                <motion.rect 
+                  x="54" y="32" width="8" rx="3"
+                  animate={{ height: [36, 18, 36] }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+                />
+                <motion.rect 
+                  x="66" y="38" width="8" rx="3"
+                  animate={{ height: [24, 12, 24] }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                />
+              </g>
+            </svg>
           </div>
           <h1 className="text-xs font-bold tracking-tight text-white uppercase font-display italic sm:text-sm">
             {t.title} <span className="text-blue-500 text-[8px] align-top not-italic ml-0.5 sm:text-[10px]">{t.pro}</span>
