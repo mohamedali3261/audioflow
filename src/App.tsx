@@ -3,40 +3,44 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { useState, useCallback, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
+  Music, 
   Settings, 
-  History,
+  History, 
+  Sparkles, 
+  Waves, 
+  Info,
   Loader2,
   AlertTriangle,
+  Play,
+  CheckCircle,
+  FileCode,
   Plus,
   Cpu,
   Zap,
   Activity,
+  HardDrive,
   Download,
-  ArrowLeft
+  Trash2
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import JSZip from 'jszip';
 
-import { Landing } from './pages/Landing';
-import { PdfEditor } from './pages/PdfEditor';
 import { AudioUploader } from './components/AudioUploader';
 import { AudioList } from './components/AudioList';
 import { SettingsPanel } from './components/SettingsPanel';
 import { WaveformVisualizer } from './components/WaveformVisualizer';
-import { AudioFile, CompressionSettings } from './types';
-import { compressAudio, loadFFmpeg } from './lib/ffmpeg';
+import { AudioFile, CompressionSettings, ProcessingStatus } from './types';
+import { compressAudio, loadFFmpeg, mergeAudios } from './lib/ffmpeg';
 import { cn } from './lib/utils';
 import { translations } from './lib/translations';
 
 export default function App() {
   const [lang, setLang] = useState<'ar' | 'en'>('ar');
-  const [currentPage, setCurrentPage] = useState<'landing' | 'audio' | 'pdf'>('landing');
   const t = translations[lang];
 
-  // Audio page state
   const [files, setFiles] = useState<AudioFile[]>([]);
   const [settings, setSettings] = useState<CompressionSettings>({
     quality: 'medium',
@@ -48,28 +52,25 @@ export default function App() {
   const [isFfmpegLoaded, setIsFfmpegLoaded] = useState(false);
   const [loadingError, setLoadingError] = useState<string | null>(null);
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'queue' | 'workstation' | 'settings'>('workstation');
 
   const selectedFile = files.find(f => f.id === selectedFileId);
 
   useEffect(() => {
     const init = async () => {
       try {
-        if (currentPage === 'audio') {
-          await loadFFmpeg();
-          setIsFfmpegLoaded(true);
-        }
+        await loadFFmpeg();
+        setIsFfmpegLoaded(true);
       } catch (err) {
         console.error('Failed to load FFmpeg:', err);
         setLoadingError(t.failureMsg);
       }
     };
     init();
-  }, [lang, currentPage, t]);
+  }, [lang]);
 
   const handleFilesAdded = (newFiles: File[]) => {
     const audioFiles: AudioFile[] = newFiles.map(file => ({
-      id: Math.random().toString(36).substring(2, 11),
+      id: Math.random().toString(36).substr(2, 9),
       file,
       name: file.name,
       size: file.size,
@@ -105,6 +106,7 @@ export default function App() {
           updateFileStatus(fileObj.id, { progress });
         }, trim);
 
+        // Generate preview URL
         const previewUrl = URL.createObjectURL(resultBlob);
 
         updateFileStatus(fileObj.id, { 
@@ -134,6 +136,7 @@ export default function App() {
   const updateFileStatus = (id: string, updates: Partial<AudioFile>) => {
     setFiles(prev => prev.map(f => {
       if (f.id === id) {
+        // Cleanup old preview URL if needed
         if (updates.previewUrl && f.previewUrl) {
           URL.revokeObjectURL(f.previewUrl);
         }
@@ -180,6 +183,8 @@ export default function App() {
   const hasIdleFiles = files.some(f => f.status === 'idle');
   const hasCompletedFiles = files.some(f => f.status === 'completed');
 
+  const [activeTab, setActiveTab] = useState<'queue' | 'workstation' | 'settings'>('workstation');
+
   const handleTrimChange = (id: string, start: number, end: number) => {
     updateFileStatus(id, { startTime: start, endTime: end });
   };
@@ -187,20 +192,6 @@ export default function App() {
   const toggleLang = () => {
     setLang(prev => prev === 'ar' ? 'en' : 'ar');
   };
-
-  const handleNavigate = (page: 'audio' | 'pdf') => {
-    setCurrentPage(page);
-  };
-
-  // Landing Page
-  if (currentPage === 'landing') {
-    return <Landing onNavigate={handleNavigate} lang={lang} />;
-  }
-
-  // PDF Editor Page
-  if (currentPage === 'pdf') {
-    return <PdfEditor onBack={() => setCurrentPage('landing')} />;
-  }
 
   if (loadingError) {
     return (
@@ -243,13 +234,6 @@ export default function App() {
       {/* Header Navigation */}
       <header className="flex items-center justify-between px-4 py-2 bg-[#1A1D23] border-b border-[#2D3139] shrink-0 sm:px-6 sm:py-3">
         <div className="flex items-center gap-2 sm:gap-3">
-          <button 
-            onClick={() => setCurrentPage('landing')}
-            className="p-1 hover:bg-[#2D3139] rounded transition-colors"
-            title="Back to home"
-          >
-            <ArrowLeft size={16} className="text-gray-400" />
-          </button>
           <div className="w-7 h-7 flex items-center justify-center sm:w-8 sm:h-8">
             <svg viewBox="0 0 100 100" className="w-full h-full">
               <defs>
@@ -513,3 +497,4 @@ export default function App() {
     </div>
   );
 }
+
