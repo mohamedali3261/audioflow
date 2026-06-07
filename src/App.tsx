@@ -48,6 +48,7 @@ export default function App() {
     bitrate: '64k',
     normalize: true,
     bassBoost: false,
+    noiseReduction: false,
   });
   const [isFfmpegLoaded, setIsFfmpegLoaded] = useState(false);
   const [loadingError, setLoadingError] = useState<string | null>(null);

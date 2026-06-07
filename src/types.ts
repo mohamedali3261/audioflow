@@ -11,6 +11,7 @@ export interface CompressionSettings {
   channels?: '1' | '2';
   normalize: boolean;
   bassBoost: boolean;
+  noiseReduction: boolean;
 }
 
 export type ProcessingStatus = 'idle' | 'loading' | 'processing' | 'completed' | 'error';

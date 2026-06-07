@@ -79,6 +79,10 @@ export const compressAudio = async (
 
   // Normalization and FX filters
   const filters = [];
+  if (settings.noiseReduction) {
+    // High-pass filter to remove low frequency noise, then anlmdn for noise reduction
+    filters.push('highpass=f=200', 'anlmdn=s=10:p=0.002:r=0.002:m=15');
+  }
   if (settings.normalize) {
     filters.push('loudnorm');
   }
