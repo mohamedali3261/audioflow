@@ -79,18 +79,43 @@ export const compressAudio = async (
 
   // Normalization and FX filters
   const filters = [];
+  
+  // Wind noise filter - removes low frequency wind rumble
+  if (settings.windNoiseFilter) {
+    filters.push('highpass=f=80', 'lowpass=f=18000');
+  }
+  
+  // Hum remover - removes 50Hz/60Hz electrical hum and harmonics
+  if (settings.humRemover) {
+    filters.push('equalizer=f=50:t=q:w=1:g=-20', 'equalizer=f=60:t=q:w=1:g=-20', 'equalizer=f=100:t=q:w=1:g=-15', 'equalizer=f=120:t=q:w=1:g=-15');
+  }
+  
+  // Noise reduction - advanced noise suppression
   if (settings.noiseReduction) {
-    // High-pass filter to remove low frequency noise, then anlmdn for noise reduction
     filters.push('highpass=f=200', 'anlmdn=s=10:p=0.002:r=0.002:m=15');
   }
+  
+  // Voice enhancement - boosts speech clarity (2-4 kHz)
+  if (settings.voiceEnhance) {
+    filters.push('equalizer=f=3000:t=h:w=2000:g=6', 'equalizer=f=200:t=h:w=100:g=-3');
+  }
+  
+  // De-esser - reduces harsh sibilance
   if (settings.deEsser) {
-    // De-esser: reduces harsh sibilance (S sounds) in 5-10kHz range
-    // Uses multi-band compression to tame high frequencies
     filters.push('equalizer=f=7000:t=q:w=2:g=-8', 'acompressor=threshold=0.5:ratio=4:attack=5:release=50:makeup=2');
   }
+  
+  // Dynamic range compressor - professional audio leveling
+  if (settings.dynamicCompressor) {
+    filters.push('acompressor=threshold=-20dB:ratio=3:attack=20:release=250:makeup=5');
+  }
+  
+  // Normalization - consistent loudness
   if (settings.normalize) {
     filters.push('loudnorm');
   }
+  
+  // Bass boost - enhances low frequencies
   if (settings.bassBoost) {
     filters.push('bass=g=5:f=100:w=1.0');
   }

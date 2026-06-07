@@ -1,4 +1,4 @@
-import { Settings2, Zap, ShieldCheck, Info, Waves, Music, Activity, Volume2, AudioWaveform } from 'lucide-react';
+import { Settings2, Zap, ShieldCheck, Info, Waves, Music, Activity, Volume2, AudioWaveform, Mic, Zap as Lightning, Gauge, Wind } from 'lucide-react';
 import { CompressionSettings } from '../types';
 import { cn } from '../lib/utils';
 
@@ -88,6 +88,27 @@ export function SettingsPanel({ settings, onChange, isProcessing, t }: SettingsP
         <div className="space-y-3">
           <label className="text-[9px] text-gray-500 uppercase block font-mono sm:text-[10px]">{t.postProcessing}</label>
           
+          {/* Voice Enhancement */}
+          <button
+            disabled={isProcessing}
+            onClick={() => onChange({ ...settings, voiceEnhance: !settings.voiceEnhance })}
+            className={cn(
+              "w-full flex items-center justify-between p-2.5 rounded-sm border font-mono text-[9px] uppercase transition-all sm:p-3",
+              settings.voiceEnhance
+                ? "bg-cyan-900/10 border-cyan-500/50 text-cyan-400"
+                : "bg-[#0F1115] border-[#2D3139] text-gray-500"
+            )}
+          >
+            <div className="flex items-center gap-2">
+              <Mic size={10} />
+              <span>{t.voiceEnhance}</span>
+            </div>
+            <div className={cn(
+              "w-1.5 h-1.5 rounded-full sm:w-2 sm:h-2",
+              settings.voiceEnhance ? "bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.5)]" : "bg-gray-800"
+            )} />
+          </button>
+
           {/* Noise Reduction */}
           <button
             disabled={isProcessing}
@@ -127,6 +148,69 @@ export function SettingsPanel({ settings, onChange, isProcessing, t }: SettingsP
             <div className={cn(
               "w-1.5 h-1.5 rounded-full sm:w-2 sm:h-2",
               settings.deEsser ? "bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.5)]" : "bg-gray-800"
+            )} />
+          </button>
+
+          {/* Hum Remover */}
+          <button
+            disabled={isProcessing}
+            onClick={() => onChange({ ...settings, humRemover: !settings.humRemover })}
+            className={cn(
+              "w-full flex items-center justify-between p-2.5 rounded-sm border font-mono text-[9px] uppercase transition-all sm:p-3",
+              settings.humRemover
+                ? "bg-yellow-900/10 border-yellow-500/50 text-yellow-400"
+                : "bg-[#0F1115] border-[#2D3139] text-gray-500"
+            )}
+          >
+            <div className="flex items-center gap-2">
+              <Lightning size={10} />
+              <span>{t.humRemover}</span>
+            </div>
+            <div className={cn(
+              "w-1.5 h-1.5 rounded-full sm:w-2 sm:h-2",
+              settings.humRemover ? "bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.5)]" : "bg-gray-800"
+            )} />
+          </button>
+
+          {/* Wind Noise Filter */}
+          <button
+            disabled={isProcessing}
+            onClick={() => onChange({ ...settings, windNoiseFilter: !settings.windNoiseFilter })}
+            className={cn(
+              "w-full flex items-center justify-between p-2.5 rounded-sm border font-mono text-[9px] uppercase transition-all sm:p-3",
+              settings.windNoiseFilter
+                ? "bg-sky-900/10 border-sky-500/50 text-sky-400"
+                : "bg-[#0F1115] border-[#2D3139] text-gray-500"
+            )}
+          >
+            <div className="flex items-center gap-2">
+              <Wind size={10} />
+              <span>{t.windNoiseFilter}</span>
+            </div>
+            <div className={cn(
+              "w-1.5 h-1.5 rounded-full sm:w-2 sm:h-2",
+              settings.windNoiseFilter ? "bg-sky-500 shadow-[0_0_8px_rgba(14,165,233,0.5)]" : "bg-gray-800"
+            )} />
+          </button>
+
+          {/* Dynamic Compressor */}
+          <button
+            disabled={isProcessing}
+            onClick={() => onChange({ ...settings, dynamicCompressor: !settings.dynamicCompressor })}
+            className={cn(
+              "w-full flex items-center justify-between p-2.5 rounded-sm border font-mono text-[9px] uppercase transition-all sm:p-3",
+              settings.dynamicCompressor
+                ? "bg-pink-900/10 border-pink-500/50 text-pink-400"
+                : "bg-[#0F1115] border-[#2D3139] text-gray-500"
+            )}
+          >
+            <div className="flex items-center gap-2">
+              <Gauge size={10} />
+              <span>{t.dynamicCompressor}</span>
+            </div>
+            <div className={cn(
+              "w-1.5 h-1.5 rounded-full sm:w-2 sm:h-2",
+              settings.dynamicCompressor ? "bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.5)]" : "bg-gray-800"
             )} />
           </button>
 
@@ -173,7 +257,7 @@ export function SettingsPanel({ settings, onChange, isProcessing, t }: SettingsP
           </button>
 
           <p className="text-[8px] text-gray-600 px-1 italic">
-            {t.normalizationDesc}
+            {t.enhancementsDesc}
           </p>
         </div>
       </div>

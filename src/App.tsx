@@ -36,6 +36,7 @@ import { AudioFile, CompressionSettings, ProcessingStatus } from './types';
 import { compressAudio, loadFFmpeg, mergeAudios } from './lib/ffmpeg';
 import { cn } from './lib/utils';
 import { translations } from './lib/translations';
+import { playCompletionSound } from './lib/soundEffects';
 
 export default function App() {
   const [lang, setLang] = useState<'ar' | 'en'>('ar');
@@ -50,6 +51,10 @@ export default function App() {
     bassBoost: false,
     noiseReduction: false,
     deEsser: false,
+    voiceEnhance: false,
+    humRemover: false,
+    dynamicCompressor: false,
+    windNoiseFilter: false,
   });
   const [isFfmpegLoaded, setIsFfmpegLoaded] = useState(false);
   const [loadingError, setLoadingError] = useState<string | null>(null);
@@ -118,6 +123,9 @@ export default function App() {
           processedSize: resultBlob.size,
           previewUrl
         });
+
+        // Play completion sound
+        playCompletionSound();
 
         confetti({
           particleCount: 40,

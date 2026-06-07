@@ -13,6 +13,10 @@ export interface CompressionSettings {
   bassBoost: boolean;
   noiseReduction: boolean;
   deEsser: boolean;
+  voiceEnhance: boolean;
+  humRemover: boolean;
+  dynamicCompressor: boolean;
+  windNoiseFilter: boolean;
 }
 
 export type ProcessingStatus = 'idle' | 'loading' | 'processing' | 'completed' | 'error';
