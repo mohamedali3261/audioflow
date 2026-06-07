@@ -49,6 +49,7 @@ export default function App() {
     normalize: true,
     bassBoost: false,
     noiseReduction: false,
+    deEsser: false,
   });
   const [isFfmpegLoaded, setIsFfmpegLoaded] = useState(false);
   const [loadingError, setLoadingError] = useState<string | null>(null);

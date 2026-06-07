@@ -1,4 +1,4 @@
-import { Settings2, Zap, ShieldCheck, Info, Waves, Music, Activity, Volume2 } from 'lucide-react';
+import { Settings2, Zap, ShieldCheck, Info, Waves, Music, Activity, Volume2, AudioWaveform } from 'lucide-react';
 import { CompressionSettings } from '../types';
 import { cn } from '../lib/utils';
 
@@ -106,6 +106,27 @@ export function SettingsPanel({ settings, onChange, isProcessing, t }: SettingsP
             <div className={cn(
               "w-1.5 h-1.5 rounded-full sm:w-2 sm:h-2",
               settings.noiseReduction ? "bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.5)]" : "bg-gray-800"
+            )} />
+          </button>
+
+          {/* De-esser */}
+          <button
+            disabled={isProcessing}
+            onClick={() => onChange({ ...settings, deEsser: !settings.deEsser })}
+            className={cn(
+              "w-full flex items-center justify-between p-2.5 rounded-sm border font-mono text-[9px] uppercase transition-all sm:p-3",
+              settings.deEsser
+                ? "bg-orange-900/10 border-orange-500/50 text-orange-400"
+                : "bg-[#0F1115] border-[#2D3139] text-gray-500"
+            )}
+          >
+            <div className="flex items-center gap-2">
+              <AudioWaveform size={10} />
+              <span>{t.deEsser}</span>
+            </div>
+            <div className={cn(
+              "w-1.5 h-1.5 rounded-full sm:w-2 sm:h-2",
+              settings.deEsser ? "bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.5)]" : "bg-gray-800"
             )} />
           </button>
 

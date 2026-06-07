@@ -12,6 +12,7 @@ export interface CompressionSettings {
   normalize: boolean;
   bassBoost: boolean;
   noiseReduction: boolean;
+  deEsser: boolean;
 }
 
 export type ProcessingStatus = 'idle' | 'loading' | 'processing' | 'completed' | 'error';

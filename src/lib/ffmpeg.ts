@@ -83,6 +83,11 @@ export const compressAudio = async (
     // High-pass filter to remove low frequency noise, then anlmdn for noise reduction
     filters.push('highpass=f=200', 'anlmdn=s=10:p=0.002:r=0.002:m=15');
   }
+  if (settings.deEsser) {
+    // De-esser: reduces harsh sibilance (S sounds) in 5-10kHz range
+    // Uses multi-band compression to tame high frequencies
+    filters.push('equalizer=f=7000:t=q:w=2:g=-8', 'acompressor=threshold=0.5:ratio=4:attack=5:release=50:makeup=2');
+  }
   if (settings.normalize) {
     filters.push('loudnorm');
   }
