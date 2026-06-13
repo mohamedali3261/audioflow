@@ -161,7 +161,9 @@ export default function App() {
     const url = URL.createObjectURL(file.resultBlob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `sonic_reduce_${file.name.split('.')[0]}.${settings.format}`;
+    // Keep original filename, just change extension
+    const originalNameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+    a.download = `${originalNameWithoutExt}.${settings.format}`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -174,7 +176,8 @@ export default function App() {
 
     const zip = new JSZip();
     completedFiles.forEach(file => {
-      const fileName = `sonic_reduce_${file.name.split('.')[0]}.${settings.format}`;
+      const originalNameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+      const fileName = `${originalNameWithoutExt}.${settings.format}`;
       zip.file(fileName, file.resultBlob!);
     });
 
