@@ -101,7 +101,8 @@ export default function App() {
     const idleFiles = files.filter(f => f.status === 'idle');
     if (idleFiles.length === 0) return;
 
-    for (const fileObj of idleFiles) {
+    // Process all files in parallel
+    const processingPromises = idleFiles.map(async (fileObj) => {
       updateFileStatus(fileObj.id, { status: 'processing', progress: 0 });
 
       try {
@@ -140,7 +141,10 @@ export default function App() {
           errorMessage: 'PROCESSING_ERROR_ST_01' 
         });
       }
-    }
+    });
+
+    // Wait for all files to complete processing
+    await Promise.all(processingPromises);
   };
 
   const updateFileStatus = (id: string, updates: Partial<AudioFile>) => {
@@ -438,7 +442,7 @@ export default function App() {
 
             {/* Execution Control */}
             {hasIdleFiles && (
-              <div className="flex justify-center pt-4">
+              <div className="flex flex-col items-center gap-3 pt-4">
                 <button
                   onClick={processAll}
                   disabled={isAnyProcessing}
@@ -448,12 +452,24 @@ export default function App() {
                     {isAnyProcessing ? (
                       <>
                         <Loader2 size={14} className="animate-spin" />
-                        {t.processing}
+                        {t.processing} ({files.filter(f => f.status === 'processing').length}/{files.filter(f => f.status === 'idle' || f.status === 'processing').length})
                       </>
                     ) : (
                       <>
                         <Cpu size={14} />
-                        {t.executepass}
+                        {t.executepass} ({files.filter(f => f.status === 'idle').length})
+                      </>
+                    )}
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                </button>
+                {isAnyProcessing && (
+                  <div className="text-[9px] font-mono text-gray-500 uppercase tracking-wider">
+                    ⚡ {lang === 'ar' ? 'معالجة متعددة نشطة' : 'Parallel Processing Active'}
+                  </div>
+                )}
+              </div>
+            )}
                       </>
                     )}
                   </div>
