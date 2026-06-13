@@ -196,6 +196,18 @@ export default function App() {
     URL.revokeObjectURL(url);
   };
 
+  const downloadAllFiles = () => {
+    const completedFiles = files.filter(f => f.status === 'completed' && f.resultBlob);
+    if (completedFiles.length === 0) return;
+
+    completedFiles.forEach((file, index) => {
+      // Add delay between downloads to prevent browser blocking
+      setTimeout(() => {
+        downloadFile(file);
+      }, index * 300); // 300ms delay between each download
+    });
+  };
+
   const isAnyProcessing = files.some(f => f.status === 'processing');
   const hasIdleFiles = files.some(f => f.status === 'idle');
   const hasCompletedFiles = files.some(f => f.status === 'completed');
@@ -357,13 +369,22 @@ export default function App() {
             </div>
             
             {hasCompletedFiles && (
-              <button
-                onClick={downloadAllAsZip}
-                className="w-full flex items-center justify-center gap-2 py-2 bg-emerald-600/20 border border-emerald-500/30 text-emerald-400 rounded-sm hover:bg-emerald-600/30 transition-colors text-[9px] uppercase font-mono font-bold"
-              >
-                <Download size={12} />
-                {t.downloadBatch}
-              </button>
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={downloadAllFiles}
+                  className="w-full flex items-center justify-center gap-2 py-2 bg-blue-600/20 border border-blue-500/30 text-blue-400 rounded-sm hover:bg-blue-600/30 transition-colors text-[9px] uppercase font-mono font-bold"
+                >
+                  <Download size={12} />
+                  {t.downloadAll}
+                </button>
+                <button
+                  onClick={downloadAllAsZip}
+                  className="w-full flex items-center justify-center gap-2 py-2 bg-emerald-600/20 border border-emerald-500/30 text-emerald-400 rounded-sm hover:bg-emerald-600/30 transition-colors text-[9px] uppercase font-mono font-bold"
+                >
+                  <Download size={12} />
+                  {t.downloadBatch}
+                </button>
+              </div>
             )}
           </div>
           
